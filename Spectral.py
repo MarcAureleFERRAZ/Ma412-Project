@@ -5,43 +5,41 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 
 """============================== Finding best parameters Spectral clustering =============================="""
-# Charger les données depuis le fichier data.npy
+# Load data from the file data.npy
 data = np.load('data.npy')
 
-# Standardiser les données
+# Standardize the data
 scaler = StandardScaler()
 data_scaled = scaler.fit_transform(data)
 
-# Essayer différents nombres de clusters
+# Try different numbers of clusters
 range_n_clusters = [2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-# Initialiser les listes pour stocker les résultats des deux méthodes
-silhouette_scores = []  # Pour le silhouette score
+# Initialize list to store the silhouette scores
+silhouette_scores = []
 
-# Calculer le silhouette score pour chaque nombre de clusters
+# Calculate the silhouette score for each number of clusters
 for n_clusters in range_n_clusters:
-    # Appliquer le spectral clustering
-    spectral = SpectralClustering(n_clusters=n_clusters, random_state=42)
-    cluster_labels = spectral.fit_predict(data_scaled)
+   # Apply spectral clustering
+   spectral = SpectralClustering(n_clusters=n_clusters, random_state=42)
+   cluster_labels = spectral.fit_predict(data_scaled)
 
-    # Calculer le silhouette score
-    silhouette_avg = silhouette_score(data_scaled, cluster_labels)
-    silhouette_scores.append(silhouette_avg)
+   # Calculate the silhouette score
+   silhouette_avg = silhouette_score(data_scaled, cluster_labels)
+   silhouette_scores.append(silhouette_avg)
 
-# Trouver le nombre optimal de clusters avec le meilleur silhouette score
+# Find the optimal number of clusters with the best silhouette score
 optimal_clusters_silhouette = range_n_clusters[np.argmax(silhouette_scores)]
 
-# Afficher les résultats
-print(f"Nombre optimal de clusters (silhouette score) : {optimal_clusters_silhouette}")
+# Display the results
+print(f"Optimal number of clusters (silhouette score) : {optimal_clusters_silhouette}")
 
-# Tracer le silhouette score en fonction du nombre de clusters
+# Plot the silhouette score as a function of the number of clusters
 plt.plot(range_n_clusters, silhouette_scores, marker='o')
-plt.xlabel('Nombre de clusters')
+plt.xlabel('Number of clusters')
 plt.ylabel('Silhouette Score')
 plt.title('Silhouette Score for Spectral Clustering')
 plt.show()
-
-
 
 """============================== Spectral clustering =============================="""
 # Load the aircraft trajectory data
@@ -52,10 +50,10 @@ scaler = StandardScaler()
 data_scaled = scaler.fit_transform(data)
 
 # Choose the number of clusters based on your problem
-n_clusters = 3  # You may need to tune this parameter
+n_clusters = 3 # You may need to tune this parameter
 
 # Apply Spectral Clustering
-spectral = SpectralClustering(n_clusters=n_clusters, random_state=42, affinity='nearest_neighbors')  # You can choose an appropriate affinity metric
+spectral = SpectralClustering(n_clusters=n_clusters, random_state=42, affinity='nearest_neighbors') # You can choose an appropriate affinity metric
 labels = spectral.fit_predict(data_scaled)
 
 # Evaluate clustering performance using silhouette score

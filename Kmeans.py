@@ -4,69 +4,68 @@ from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 
-"""============================== Find the good number of cluster with silhouette score and elbow method =============================="""
-# Charger les données depuis le fichier data.npy
+"""============================== Find the optimal number of clusters with silhouette score and elbow method =============================="""
+# Load data from the file 'data.npy'
 data = np.load('data.npy')
 
-# Standardiser les données
+# Standardize the data
 scaler = StandardScaler()
 data_scaled = scaler.fit_transform(data)
 
-# Essayer différents nombres de clusters
+# Try different numbers of clusters
 range_n_clusters = [2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-# Initialiser les listes pour stocker les résultats des deux méthodes
-inertia_values = []  # Pour la méthode du coude
-silhouette_scores = []  # Pour le silhouette score
+# Initialize lists to store the results of both methods
+inertia_values = []  # For the elbow method
+silhouette_scores = []  # For the silhouette score
 
-# Calculer l'inertie et le silhouette score pour chaque nombre de clusters
+# Calculate inertia and silhouette score for each number of clusters
 for n_clusters in range_n_clusters:
-    # Appliquer le k-means
-    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
-    kmeans.fit(data_scaled)
+   # Apply k-means
+   kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+   kmeans.fit(data_scaled)
 
-    # Calculer l'inertie (méthode du coude)
-    inertia_values.append(kmeans.inertia_)
+   # Calculate inertia (elbow method)
+   inertia_values.append(kmeans.inertia_)
 
-    # Calculer le silhouette score
-    cluster_labels = kmeans.labels_
-    silhouette_avg = silhouette_score(data_scaled, cluster_labels)
-    silhouette_scores.append(silhouette_avg)
+   # Calculate silhouette score
+   cluster_labels = kmeans.labels_
+   silhouette_avg = silhouette_score(data_scaled, cluster_labels)
+   silhouette_scores.append(silhouette_avg)
 
-# Trouver le nombre optimal de clusters avec la méthode du coude
+# Find the optimal number of clusters using the elbow method
 optimal_clusters_elbow = range_n_clusters[np.argmin(np.gradient(inertia_values))]
 
-# Trouver le nombre optimal de clusters avec le meilleur silhouette score
+# Find the optimal number of clusters using the best silhouette score
 optimal_clusters_silhouette = range_n_clusters[np.argmax(silhouette_scores)]
 
-# Moyenne des résultats obtenus par chaque méthode
+# Average the results obtained by each method
 average_optimal_clusters = (optimal_clusters_elbow + optimal_clusters_silhouette) // 2
 
-# Afficher les résultats
-print(f"Nombre optimal de clusters (méthode du coude) : {optimal_clusters_elbow}")
-print(f"Nombre optimal de clusters (silhouette score) : {optimal_clusters_silhouette}")
-print(f"Moyenne des résultats obtenus par chaque méthode : {average_optimal_clusters}")
+# Display the results
+print(f"Optimal number of clusters (elbow method) : {optimal_clusters_elbow}")
+print(f"Optimal number of clusters (silhouette score) : {optimal_clusters_silhouette}")
+print(f"Average of the results obtained by each method : {average_optimal_clusters}")
 
-# Tracer la courbe du coude (elbow) et le silhouette score en fonction du nombre de clusters
+# Plot the elbow curve and the silhouette score against the number of clusters
 plt.figure(figsize=(12, 4))
 
-# Méthode du coude
+# Elbow method
 plt.subplot(1, 2, 1)
 plt.plot(range_n_clusters, inertia_values, marker='o')
-plt.xlabel('Nombre de clusters')
-plt.ylabel('Inertie')
-plt.title('Elbow method')
+plt.xlabel('Number of clusters')
+plt.ylabel('Inertia')
+plt.title('Elbow Method')
 
 # Silhouette score
 plt.subplot(1, 2, 2)
 plt.plot(range_n_clusters, silhouette_scores, marker='o')
-plt.xlabel('Nombre de clusters')
+plt.xlabel('Number of clusters')
 plt.ylabel('Silhouette Score')
 plt.title('Silhouette Score')
 
 plt.tight_layout()
 plt.show()
-
 
 """============================== K-means =============================="""
 # Load the aircraft trajectory data
@@ -75,7 +74,6 @@ data = np.load('data.npy')
 # Standardize the data
 scaler = StandardScaler()
 data_scaled = scaler.fit_transform(data)
-
 
 # Choose the number of clusters based on your problem
 n_clusters = 4  # You may need to tune this parameter
